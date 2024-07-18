@@ -1,12 +1,10 @@
 # API Qxote Documentation:
+## !!DISCLAIMER!!
+These are the results of the Technova 2023 excursion. This was first and foremost to be used as a demo on what an API used by different apps of QXote could look like.
+This project has since changed to not only to be used for demo purposes, but for future development projects as well.
+
 ## Getting started
 Please clone the repository and connect it to your local host before use!
-
-### How to clone the repository
-[Work in progress...]
-
-### How to connect to localhost
-[Work in progress...]
 
 ## Database
 **Decimals can go to two digits**
@@ -31,7 +29,6 @@ There are five tables inside of the database.
 The "plant" table is linked to the "zone" table.
 There can be *multiple* plants in *one zone*!
 
-
 **The "tree" table consists of this data:**
 - tree_id [primary key] (a unique number for each tree. Each number can ONLY BE USED ONCE!)
 - tree_nr (defines the tree number from an area area)
@@ -45,7 +42,6 @@ There can be *multiple* plants in *one zone*!
 
 The "tree" table is linked to the "zone" table.
 There can be *multiple* trees but each tree has *one* tree type!
-
 
 **The "bio_concentration" table consists of this data:**
 - id [primary key] (a unique ID given with each type, this value is automatically added by the database)
@@ -62,7 +58,6 @@ The "bio_concentration" table is linked to the "tree" table.
 - coordinate_count (the number of trees that are on this coördinate)
 
 The "tree_name" table is linked to the "tree" table.
-
 
 **The "animal" table consists of this data:**
 - animal_id [primary key] (a unique ID given with each type, this value is automatically added by the database)
@@ -83,4 +78,4 @@ The "animal" table is linked to the "zone" table.
 There can be *multiple* animals spotted in *one zone*!
 
 ## API Documentation
-[Work in progress...]
+The API uses standard Odata syntax to make restful API calls. For more information please see: https://www.odata.org/getting-started/
