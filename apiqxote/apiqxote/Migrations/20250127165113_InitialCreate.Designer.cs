@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using apiqxote.databaseqxote;
@@ -11,96 +12,79 @@ using apiqxote.databaseqxote;
 namespace apiqxote.Migrations
 {
     [DbContext(typeof(DatabaseqxoteContext))]
-    [Migration("20231123102746_DatabaseV2")]
-    partial class DatabaseV2
+    [Migration("20250127165113_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("apiqxote.Models.Animal", b =>
                 {
                     b.Property<int>("AnimalId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
+                        .HasColumnType("int")
                         .HasColumnName("animal_id");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnimalId"));
+
                     b.Property<string>("Abudance")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("abudance")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("abudance");
 
                     b.Property<int?>("CloudCover")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
-                        .HasColumnName("cloud_cover")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("int")
+                        .HasColumnName("cloud_cover");
 
                     b.Property<string>("Coordinates")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(90)
-                        .HasColumnType("varchar(90)")
-                        .HasColumnName("coordinates")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(90)")
+                        .HasColumnName("coordinates");
 
                     b.Property<string>("Coverboards")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("coverboards")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("coverboards");
 
                     b.Property<DateTime?>("Date")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasColumnName("date")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("date");
 
-                    b.Property<TimeSpan?>("EndTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("time")
-                        .HasColumnName("end_time")
-                        .HasDefaultValueSql("'NULL'");
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime")
+                        .HasColumnName("end_time");
 
                     b.Property<string>("SpeciesName")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("species_name")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("species_name");
 
-                    b.Property<TimeSpan?>("StartTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("time")
-                        .HasColumnName("start_time")
-                        .HasDefaultValueSql("'NULL'");
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("datetime")
+                        .HasColumnName("start_time");
 
                     b.Property<double?>("Temperature")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("double")
-                        .HasColumnName("temperature")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("float")
+                        .HasColumnName("temperature");
 
                     b.Property<int?>("WindSpeed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
-                        .HasColumnName("wind_speed")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("int")
+                        .HasColumnName("wind_speed");
 
                     b.Property<string>("Zone")
                         .IsRequired()
                         .HasMaxLength(1)
-                        .HasColumnType("varchar(1)")
+                        .HasColumnType("nvarchar(1)")
                         .HasColumnName("zone");
 
-                    b.HasKey("AnimalId")
-                        .HasName("PRIMARY");
+                    b.HasKey("AnimalId");
 
                     b.HasIndex(new[] { "Zone" }, "fk_animal_zone1");
 
@@ -111,46 +95,33 @@ namespace apiqxote.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
+                        .HasColumnType("int")
                         .HasColumnName("id");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<decimal?>("Bcf")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("bcf")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("bcf");
 
                     b.Property<decimal?>("Cf")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("cf")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("cf");
 
                     b.Property<decimal?>("Ctree")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("ctree")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("ctree");
 
                     b.Property<decimal?>("R")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("r")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("r");
 
                     b.Property<string>("Species")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("species")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("species");
 
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
+                    b.HasKey("Id");
 
                     b.ToTable("bio_concentration", (string)null);
                 });
@@ -159,64 +130,51 @@ namespace apiqxote.Migrations
                 {
                     b.Property<int>("PlantId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
+                        .HasColumnType("int")
                         .HasColumnName("plant_id");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlantId"));
+
                     b.Property<string>("Coordinate")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(90)
-                        .HasColumnType("varchar(90)")
-                        .HasColumnName("coordinate")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(90)")
+                        .HasColumnName("coordinate");
 
                     b.Property<string>("Cover")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("cover")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("cover");
 
                     b.Property<DateTime?>("Date")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("date")
-                        .HasColumnName("date")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("date");
 
                     b.Property<float?>("Humidity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("float")
-                        .HasColumnName("humidity")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("real")
+                        .HasColumnName("humidity");
 
                     b.Property<string>("PlotNr")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(4)
-                        .HasColumnType("varchar(4)")
-                        .HasColumnName("plot_nr")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(4)")
+                        .HasColumnName("plot_nr");
 
                     b.Property<string>("Species")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("species")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("species");
 
                     b.Property<string>("Temperature")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
-                        .HasColumnName("temperature")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("temperature");
 
                     b.Property<string>("Zone")
                         .IsRequired()
                         .HasMaxLength(1)
-                        .HasColumnType("varchar(1)")
+                        .HasColumnType("nvarchar(1)")
                         .HasColumnName("zone");
 
-                    b.HasKey("PlantId")
-                        .HasName("PRIMARY");
+                    b.HasKey("PlantId");
 
                     b.HasIndex(new[] { "Zone" }, "fk_plant_zone1");
 
@@ -227,54 +185,44 @@ namespace apiqxote.Migrations
                 {
                     b.Property<int>("TreeNr")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
+                        .HasColumnType("int")
                         .HasColumnName("tree_nr");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TreeNr"));
 
                     b.Property<string>("Zone")
                         .HasMaxLength(1)
-                        .HasColumnType("varchar(1)")
+                        .HasColumnType("nvarchar(1)")
                         .HasColumnName("zone");
 
                     b.Property<int>("BioConcentrationId")
-                        .HasColumnType("int(11)")
+                        .HasColumnType("int")
                         .HasColumnName("bio_concentration_id");
 
                     b.Property<decimal?>("Circumference")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("circumference")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("circumference");
 
                     b.Property<string>("Coordinate")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(90)
-                        .HasColumnType("varchar(90)")
-                        .HasColumnName("coordinate")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(90)")
+                        .HasColumnName("coordinate");
 
                     b.Property<decimal?>("Height")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("height")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("height");
 
                     b.Property<string>("TreeName")
                         .IsRequired()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
+                        .HasColumnType("nvarchar(45)")
                         .HasColumnName("tree_name");
 
                     b.Property<decimal?>("Volume")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("volume")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnName("volume");
 
-                    b.HasKey("TreeNr", "Zone")
-                        .HasName("PRIMARY");
+                    b.HasKey("TreeNr", "Zone");
 
                     b.HasIndex(new[] { "BioConcentrationId" }, "fk_tree_bio_concentration1");
 
@@ -289,17 +237,14 @@ namespace apiqxote.Migrations
                 {
                     b.Property<string>("TreeName1")
                         .HasMaxLength(45)
-                        .HasColumnType("varchar(45)")
+                        .HasColumnType("nvarchar(45)")
                         .HasColumnName("tree_name");
 
                     b.Property<int?>("CoordinateCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
-                        .HasColumnName("coordinate_count")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("int")
+                        .HasColumnName("coordinate_count");
 
-                    b.HasKey("TreeName1")
-                        .HasName("PRIMARY");
+                    b.HasKey("TreeName1");
 
                     b.ToTable("tree_name", (string)null);
                 });
@@ -308,29 +253,22 @@ namespace apiqxote.Migrations
                 {
                     b.Property<string>("Zone1")
                         .HasMaxLength(1)
-                        .HasColumnType("varchar(1)")
+                        .HasColumnType("nvarchar(1)")
                         .HasColumnName("zone");
 
                     b.Property<int?>("Area")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
-                        .HasColumnName("area")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("int")
+                        .HasColumnName("area");
 
                     b.Property<string>("Classification")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("enum('homogenuis','no_homogenuis','transition')")
-                        .HasColumnName("classification")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("classification");
 
                     b.Property<int?>("Plots")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)")
-                        .HasColumnName("plots")
-                        .HasDefaultValueSql("'NULL'");
+                        .HasColumnType("int")
+                        .HasColumnName("plots");
 
-                    b.HasKey("Zone1")
-                        .HasName("PRIMARY");
+                    b.HasKey("Zone1");
 
                     b.ToTable("zone", (string)null);
                 });
