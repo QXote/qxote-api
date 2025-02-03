@@ -1,9 +1,6 @@
-
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.ModelBuilder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Org.BouncyCastle.Asn1.X509;
 using apiqxote.Models;
 using apiqxote.databaseqxote;
 

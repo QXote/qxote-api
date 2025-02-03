@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SqlServer" database="SqlServer" id="SqlServer-183d" >
+	<schema name="dbo" catalogname="QxoteDb" >
+		<table name="EnvironmentalMeasurements" prior="Environ" >
+			<column name="EnivormentalMeasurementId" type="int" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY ( 1 , 1 )]]></identity>
+			</column>
+			<column name="LocationPoint" type="geography" jt="1111" mandatory="y" />
+			<column name="RecordedAt" type="datetime" jt="92" mandatory="y" />
+			<column name="TemperatureCelcius" prior="Temperature" type="decimal" length="3" decimal="1" jt="3" />
+			<column name="HumidityPercent" type="decimal" length="3" decimal="1" jt="3" />
+			<index name="pk_EnvironmentalMeasurements" unique="PRIMARY_KEY" >
+				<column name="EnivormentalMeasurementId" />
+			</index>
+		</table>
+		<table name="Flora" prior="Tbl" >
+			<column name="FloraId" type="int" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY ( 1 , 1 )]]></identity>
+			</column>
+			<column name="LatinName" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="EnglishName" type="varchar" length="100" jt="12" />
+			<column name="IsSeasonal" type="bit" jt="-7" mandatory="y" >
+				<comment><![CDATA[If a plant only occurs at a certain time of year]]></comment>
+			</column>
+			<index name="pk_Flora" unique="PRIMARY_KEY" >
+				<column name="FloraId" />
+			</index>
+		</table>
+		<table name="FloraMeasurements" prior="FloraMeasurement" >
+			<column name="FloraMeasurementId" type="int" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY ( 1 , 1 )]]></identity>
+			</column>
+			<column name="FloraRecordId" type="int" jt="4" mandatory="y" />
+			<column name="HeightCm" prior="HeightM" type="decimal" length="7" decimal="2" jt="3" >
+				<comment><![CDATA[Height in meters]]></comment>
+			</column>
+			<column name="CircumferenceCm" type="decimal" length="7" decimal="2" jt="3" />
+			<index name="pk_FloraMeasurement" unique="PRIMARY_KEY" >
+				<column name="FloraMeasurementId" />
+			</index>
+			<fk name="fk_FloraMeasurement_FloraRecord" to_schema="QxoteDb.dbo" to_table="FloraRecords" >
+				<fk_column name="FloraRecordId" pk="FloraRecordId" />
+			</fk>
+		</table>
+		<table name="FloraRecords" prior="FloraRecord" >
+			<column name="FloraRecordId" type="int" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY ( 1 , 1 )]]></identity>
+			</column>
+			<column name="FloraId" type="int" jt="4" mandatory="y" />
+			<column name="LocationPoint" type="geography" jt="1111" mandatory="y" />
+			<column name="ApproximateOriginAt" type="date" jt="91" />
+			<column name="RemovedAt" type="date" jt="91" />
+			<index name="pk_FloraRecord" unique="PRIMARY_KEY" >
+				<column name="FloraRecordId" />
+			</index>
+			<fk name="fk_FloraRecord_Flora" to_schema="QxoteDb.dbo" to_table="Flora" >
+				<fk_column name="FloraId" pk="FloraId" />
+			</fk>
+		</table>
+		<table name="Zones" prior="Tbl" >
+			<column name="ZoneId" type="int" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY ( 1 , 1 )]]></identity>
+			</column>
+			<column name="ZoneCode" type="char" length="1" jt="1" mandatory="y" />
+			<column name="ZonePolygon" type="geography" jt="1111" mandatory="y" />
+			<index name="pk_Zones" unique="PRIMARY_KEY" >
+				<column name="ZoneId" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Main Diagram" id="Diagram-22f1" show_relation="columns" >
+		<entity schema="QxoteDb.dbo" name="EnvironmentalMeasurements" color="C1D8EE" x="512" y="544" />
+		<entity schema="QxoteDb.dbo" name="Flora" color="669966" x="256" y="256" />
+		<entity schema="QxoteDb.dbo" name="FloraMeasurements" color="669966" x="224" y="640" />
+		<entity schema="QxoteDb.dbo" name="FloraRecords" color="669966" x="240" y="432" />
+		<entity schema="QxoteDb.dbo" name="Zones" color="C1D8EE" x="528" y="320" />
+		<callout x="48" y="80" pointer="Round" >
+			<comment><![CDATA[Create new tables by right-clicking the diagram.
+Double-click the table headers, columns, or foreign keys to edit.
+The schema structure will be saved to the design model file.]]></comment>
+		</callout>
+		<group name="FloraGroup_" color="669966" >
+			<entity schema="QxoteDb.dbo" name="FloraMeasurements" />
+			<entity schema="QxoteDb.dbo" name="FloraRecords" />
+			<entity schema="QxoteDb.dbo" name="Flora" />
+		</group>
+	</layout>
+</project>

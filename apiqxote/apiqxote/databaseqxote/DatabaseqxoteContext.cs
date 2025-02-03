@@ -29,7 +29,7 @@ public partial class DatabaseqxoteContext : DbContext
     public virtual DbSet<Zone> Zones { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=QxoteDb;Trusted_Connection=true;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=QxoteDbOld;Trusted_Connection=true;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
