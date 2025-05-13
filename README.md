@@ -24,7 +24,29 @@ This project has since changed to not only to be used for demo purposes, but for
 
 ### API
 
-- Download the neccessary Nuget packages if you haven't already.
+- Download the necessary Nuget packages if you haven't already.
+
+### Installing EF Core Tools
+
+To install the Entity Framework Core tools globally, run the following, this gets the latest version:
+
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+You can verify the installation by running:
+
+```bash
+dotnet ef --version
+```
+Common EF Core Commands
+Here are some commonly used EF Core commands:  
+Update the database: Applies pending migrations to the database.  <pre>dotnet ef database update </pre>
+Add a new migration: Creates a new migration script. Replace <MigrationName> with the name of your migration.  <pre>dotnet ef migrations add <MigrationName> </pre>
+Remove the last migration: Removes the most recent migration.  <pre>dotnet ef migrations remove </pre>
+List migrations: Displays all migrations applied to the database.  <pre>dotnet ef migrations list </pre>
+Generate SQL script: Generates a SQL script for the migrations.  <pre>dotnet ef migrations script </pre>
 
 ## API Documentation
 The API uses standard Odata syntax to make restful API calls. For more information please see: [Odata documentation](https://www.odata.org/getting-started/)
+

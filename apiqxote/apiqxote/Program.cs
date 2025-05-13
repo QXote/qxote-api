@@ -19,7 +19,6 @@ namespace apiqxote
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
 
             var modelBuilder = new ODataConventionModelBuilder();
             modelBuilder.EntityType<Animal>();
@@ -35,9 +34,10 @@ namespace apiqxote
             });
 
             builder.Services.AddControllers().AddOData(
-    options => options.Select().Filter().OrderBy().Expand().Count().SetMaxTop(null).AddRouteComponents(
-        "odata",
-        modelBuilder.GetEdmModel()));
+                options => options.Select().Filter().OrderBy().Expand().Count().SetMaxTop(null).AddRouteComponents(
+                    "odata", modelBuilder.GetEdmModel()
+                )
+            );
 
             var app = builder.Build();
 
