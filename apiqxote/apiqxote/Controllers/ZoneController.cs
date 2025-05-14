@@ -10,7 +10,7 @@ namespace apiqxote.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ZoneController : ControllerBase  
+    public class ZoneController : ControllerBase
     {
         private readonly DatabaseqxoteContext _context;
         private readonly IMapper _mapper;
@@ -21,45 +21,59 @@ namespace apiqxote.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<AnimalController>
+        // GET: api/Zone
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult<IEnumerable<Animal>>> GetZones()
+        public async Task<ActionResult<IEnumerable<Zone>>> GetZones()
         {
-            return Ok(_context.Zones.ToList());
+            return Ok(await _context.Zones.ToListAsync());
         }
 
-        // POST api/<AnimalController>
+        // GET: api/Zone/{zoneName}
+        [HttpGet("{zoneName}")]
+        public async Task<ActionResult<ZoneDTO>> GetZone(string zoneName)
+        {
+            var zone = await _context.Zones.FindAsync(zoneName);
+            if (zone == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<ZoneDTO>(zone));
+        }
+
+        // POST: api/Zone
         [HttpPost]
-        public async Task<ActionResult<ZoneDTO>> Post(ZoneDTO zone)
+        public async Task<ActionResult<ZoneDTO>> Post(ZoneDTO zoneDto)
         {
             if (_context.Zones == null)
             {
-                return Problem("Entity set is null.");
+                return Problem("Entity set 'Zones' is null.");
             }
-            Zone zoneToAdd = _mapper.Map<Zone>(zone);
+
+            var zoneToAdd = _mapper.Map<Zone>(zoneDto);
             _context.Zones.Add(zoneToAdd);
             await _context.SaveChangesAsync();
 
-            zone.Zone1 = zoneToAdd.Zone1;
-            return Ok(zone);
+            return CreatedAtAction(nameof(GetZone), new { zoneName = zoneDto.Zone1 }, zoneDto);
         }
 
-        // PUT api/<AnimalController>/5
+        // PUT: api/Zone/{zoneName}
         [HttpPut("{zoneName}")]
-        public async Task<ActionResult<AnimalDTO>> Put(string zoneName, ZoneDTO zone)
+        public async Task<IActionResult> Put(string zoneName, ZoneDTO zoneDto)
         {
-            if (zoneName != zone.Zone1)
+            if (zoneName != zoneDto.Zone1)
             {
-                return BadRequest();
+                return BadRequest("Zone name mismatch.");
             }
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
-            Zone zoneToEdit = _mapper.Map<Zone>(zone);
-            _context.Entry(zoneToEdit).State = EntityState.Modified;
 
+            var existingZone = await _context.Zones.FindAsync(zoneName);
+            if (existingZone == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(zoneDto, existingZone);
 
             try
             {
@@ -67,27 +81,27 @@ namespace apiqxote.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+                if (!_context.Zones.Any(z => z.Zone1 == zoneName))
+                {
+                    return NotFound();
+                }
                 throw;
             }
 
             return NoContent();
         }
 
-        // DELETE api/<AnimalController>/5
+        // DELETE: api/Zone/{zoneName}
         [HttpDelete("{zoneName}")]
         public async Task<IActionResult> Delete(string zoneName)
         {
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
             var zone = await _context.Zones.FindAsync(zoneName);
             if (zone == null)
             {
                 return NotFound();
             }
 
-            _context.Remove(zone);
+            _context.Zones.Remove(zone);
             await _context.SaveChangesAsync();
 
             return NoContent();

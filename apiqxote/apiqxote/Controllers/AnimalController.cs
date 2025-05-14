@@ -1,14 +1,10 @@
-﻿
-using apiqxote.databaseqxote;
+﻿using apiqxote.databaseqxote;
 using apiqxote.DTOModels;
 using apiqxote.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace apiqxote.Controllers
 {
@@ -16,7 +12,6 @@ namespace apiqxote.Controllers
     [ApiController]
     public class AnimalController : ControllerBase
     {
-
         private readonly DatabaseqxoteContext _context;
         private readonly IMapper _mapper;
 
@@ -26,45 +21,61 @@ namespace apiqxote.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<AnimalController>
+        // GET: api/Animal
         [HttpGet]
         [EnableQuery]
         public async Task<ActionResult<IEnumerable<Animal>>> GetAnimals()
         {
-            return Ok(_context.Animals.ToList());
+            return Ok(await _context.Animals.ToListAsync());
         }
 
-        // POST api/<AnimalController>
+        // GET: api/Animal/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AnimalDTO>> GetAnimal(int id)
+        {
+            var animal = await _context.Animals.FindAsync(id);
+            if (animal == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<AnimalDTO>(animal));
+        }
+
+        // POST: api/Animal
         [HttpPost]
-        public async Task<ActionResult<AnimalDTO>> Post(AnimalDTO animal)
+        public async Task<ActionResult<AnimalDTO>> Post(AnimalDTO animalDto)
         {
             if (_context.Animals == null)
             {
-                return Problem("Entity set is null.");
+                return Problem("Entity set 'Animals' is null.");
             }
-            Animal animalToAdd = _mapper.Map<Animal>(animal);
+
+            var animalToAdd = _mapper.Map<Animal>(animalDto);
             _context.Animals.Add(animalToAdd);
             await _context.SaveChangesAsync();
 
-            animal.AnimalId = animalToAdd.AnimalId;
-            return Ok(animal);
+            animalDto.AnimalId = animalToAdd.AnimalId;
+
+            return CreatedAtAction(nameof(GetAnimal), new { id = animalDto.AnimalId }, animalDto);
         }
 
-        // PUT api/<AnimalController>/5
+        // PUT: api/Animal/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<AnimalDTO>> Put(int id, AnimalDTO animal)
+        public async Task<IActionResult> Put(int id, AnimalDTO animalDto)
         {
-            if (id != animal.AnimalId)
+            if (id != animalDto.AnimalId)
             {
-                return BadRequest();
+                return BadRequest("ID in route does not match ID in body.");
             }
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
-            Animal animalToEdit = _mapper.Map<Animal>(animal);
-            _context.Entry(animalToEdit).State = EntityState.Modified;
 
+            var existingAnimal = await _context.Animals.FindAsync(id);
+            if (existingAnimal == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(animalDto, existingAnimal);
 
             try
             {
@@ -72,27 +83,27 @@ namespace apiqxote.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+                if (!_context.Animals.Any(a => a.AnimalId == id))
+                {
+                    return NotFound();
+                }
                 throw;
             }
 
             return NoContent();
         }
 
-        // DELETE api/<AnimalController>/5
+        // DELETE: api/Animal/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
             var animal = await _context.Animals.FindAsync(id);
             if (animal == null)
             {
                 return NotFound();
             }
 
-            _context.Remove(animal);
+            _context.Animals.Remove(animal);
             await _context.SaveChangesAsync();
 
             return NoContent();

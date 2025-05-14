@@ -10,7 +10,7 @@ namespace apiqxote.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantController : ControllerBase  
+    public class PlantController : ControllerBase
     {
         private readonly DatabaseqxoteContext _context;
         private readonly IMapper _mapper;
@@ -21,45 +21,62 @@ namespace apiqxote.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<AnimalController>
+        // GET: api/Plant
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult<IEnumerable<TreeName>>> GetPlantNames()
+        public async Task<ActionResult<IEnumerable<Plant>>> GetPlants()
         {
-            return Ok(_context.Plants.ToList());
+            return Ok(await _context.Plants.ToListAsync());
         }
 
-        // POST api/<AnimalController>
-        [HttpPost]
-        public async Task<ActionResult<PlantDTO>> Post(PlantDTO plant)
+        // GET: api/Plant/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Plant>> GetPlant(int id)
         {
-            if (_context.Zones == null)
-            {
-                return Problem("Entity set is null.");
-            }
-            Plant plantToAdd = _mapper.Map<Plant>(plant);
-            _context.Plants.Add(plantToAdd);
-            await _context.SaveChangesAsync();
+            var plant = await _context.Plants.FindAsync(id);
 
-            plant.PlantId = plantToAdd.PlantId;
+            if (plant == null)
+            {
+                return NotFound();
+            }
+
             return Ok(plant);
         }
 
-        // PUT api/<AnimalController>/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult<AnimalDTO>> Put(int id, PlantDTO plant)
+        // POST: api/Plant
+        [HttpPost]
+        public async Task<ActionResult<PlantDTO>> Post(PlantDTO plantDto)
         {
-            if (id != plant.PlantId)
+            if (_context.Plants == null)
             {
-                return BadRequest();
+                return Problem("Entity set 'Plants' is null.");
             }
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
-            Plant plantToEdit = _mapper.Map<Plant>(plant);
-            _context.Entry(plantToEdit).State = EntityState.Modified;
 
+            var plantToAdd = _mapper.Map<Plant>(plantDto);
+            _context.Plants.Add(plantToAdd);
+            await _context.SaveChangesAsync();
+
+            plantDto.PlantId = plantToAdd.PlantId;
+
+            return CreatedAtAction(nameof(GetPlant), new { id = plantDto.PlantId }, plantDto);
+        }
+
+        // PUT: api/Plant/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, PlantDTO plantDto)
+        {
+            if (id != plantDto.PlantId)
+            {
+                return BadRequest("Plant ID mismatch.");
+            }
+
+            var existingPlant = await _context.Plants.FindAsync(id);
+            if (existingPlant == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(plantDto, existingPlant);
 
             try
             {
@@ -67,27 +84,27 @@ namespace apiqxote.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+                if (!_context.Plants.Any(p => p.PlantId == id))
+                {
+                    return NotFound();
+                }
                 throw;
             }
 
             return NoContent();
         }
 
-        // DELETE api/<AnimalController>/5
+        // DELETE: api/Plant/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
             var plant = await _context.Plants.FindAsync(id);
             if (plant == null)
             {
                 return NotFound();
             }
 
-            _context.Remove(plant);
+            _context.Plants.Remove(plant);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -10,7 +10,7 @@ namespace apiqxote.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TreeNameController : ControllerBase  
+    public class TreeNameController : ControllerBase
     {
         private readonly DatabaseqxoteContext _context;
         private readonly IMapper _mapper;
@@ -21,45 +21,60 @@ namespace apiqxote.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<AnimalController>
+        // GET: api/TreeName
         [HttpGet]
         [EnableQuery]
         public async Task<ActionResult<IEnumerable<TreeName>>> GetTreeNames()
         {
-            return Ok(_context.TreeNames.ToList());
+            return Ok(await _context.TreeNames.ToListAsync());
         }
 
-        // POST api/<AnimalController>
-        [HttpPost]
-        public async Task<ActionResult<ZoneDTO>> Post(ZoneDTO zone)
+        // GET: api/TreeName/{treeName1}
+        [HttpGet("{treeName1}")]
+        public async Task<ActionResult<TreeNameDTO>> GetTreeNameByName(string treeName1)
         {
-            if (_context.Zones == null)
+            var treeName = await _context.TreeNames.FindAsync(treeName1);
+
+            if (treeName == null)
             {
-                return Problem("Entity set is null.");
+                return NotFound();
             }
-            Zone zoneToAdd = _mapper.Map<Zone>(zone);
-            _context.Zones.Add(zoneToAdd);
+
+            return Ok(_mapper.Map<TreeNameDTO>(treeName));
+        }
+
+        // POST: api/TreeName
+        [HttpPost]
+        public async Task<ActionResult<TreeNameDTO>> Post(TreeNameDTO treeNameDto)
+        {
+            if (_context.TreeNames == null)
+            {
+                return Problem("Entity set 'TreeNames' is null.");
+            }
+
+            var treeNameToAdd = _mapper.Map<TreeName>(treeNameDto);
+            _context.TreeNames.Add(treeNameToAdd);
             await _context.SaveChangesAsync();
 
-            zone.Zone1 = zoneToAdd.Zone1;
-            return Ok(zone);
+            return CreatedAtAction(nameof(GetTreeNameByName), new { treeName1 = treeNameDto.TreeName1 }, treeNameDto);
         }
 
-        // PUT api/<AnimalController>/5
-        [HttpPut("{zoneName}")]
-        public async Task<ActionResult<AnimalDTO>> Put(string zoneName, ZoneDTO zone)
+        // PUT: api/TreeName/{treeName1}
+        [HttpPut("{treeName1}")]
+        public async Task<IActionResult> Put(string treeName1, TreeNameDTO treeNameDto)
         {
-            if (zoneName != zone.Zone1)
+            if (treeName1 != treeNameDto.TreeName1)
             {
-                return BadRequest();
+                return BadRequest("Primary key mismatch.");
             }
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
-            Zone zoneToEdit = _mapper.Map<Zone>(zone);
-            _context.Entry(zoneToEdit).State = EntityState.Modified;
 
+            var existingTree = await _context.TreeNames.FindAsync(treeName1);
+            if (existingTree == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(treeNameDto, existingTree);
 
             try
             {
@@ -67,27 +82,27 @@ namespace apiqxote.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+                if (!_context.TreeNames.Any(e => e.TreeName1 == treeName1))
+                {
+                    return NotFound();
+                }
                 throw;
             }
 
             return NoContent();
         }
 
-        // DELETE api/<AnimalController>/5
-        [HttpDelete("{zoneName}")]
-        public async Task<IActionResult> Delete(string zoneName)
+        // DELETE: api/TreeName/{treeName1}
+        [HttpDelete("{treeName1}")]
+        public async Task<IActionResult> Delete(string treeName1)
         {
-            if (_context.Animals == null)
-            {
-                return Problem("Entity set is null.");
-            }
-            var zone = await _context.Zones.FindAsync(zoneName);
-            if (zone == null)
+            var tree = await _context.TreeNames.FindAsync(treeName1);
+            if (tree == null)
             {
                 return NotFound();
             }
 
-            _context.Remove(zone);
+            _context.TreeNames.Remove(tree);
             await _context.SaveChangesAsync();
 
             return NoContent();

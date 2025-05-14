@@ -10,6 +10,5 @@ namespace apiqxote.Profiles
         {
             CreateMap<Animal, AnimalDTO>().ReverseMap();
         }
-
     }
 }
