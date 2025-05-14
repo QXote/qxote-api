@@ -1,0 +1,40 @@
+name: .NET Qxote-Api CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+   # TODO: Set up unit tests
+   # - name: Test
+   #   run: dotnet test --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish --configuration Release --output ./published
+    - name: Run EF Core Migrations
+      run: |
+        dotnet ef database update --project ./YourProjectName/YourProjectName.csproj --startup-project ./YourProjectName/YourProjectName.csproj
+      env:
+        DOTNET_CONNECTION_STRING: ${{ secrets.SQL_SERVER_CONNECTION_STRING }}
+    - name: Deploy and Restart the Application
+      run: |
+        cp -r ./published/* /var/www/myapp/
+        sudo systemctl restart qxoteapi.service
+
+
