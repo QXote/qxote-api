@@ -47,7 +47,9 @@ jobs:
         DOTNET_CONNECTION_STRING: ${{ secrets.SQL_SERVER_CONNECTION_STRING }}
         
     - name: Deploy and Restart the Application
+      working-directory: apiqxote/apiqxote
       run: |
+        ls
         cp -r ./published/* /var/www/apiqxote/
         sudo systemctl restart qxoteapi.service
 
