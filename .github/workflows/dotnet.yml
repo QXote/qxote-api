@@ -35,7 +35,10 @@ jobs:
     - name: Publish
       working-directory: apiqxote/apiqxote
       run: dotnet publish --configuration Release --output ./published
-      
+
+    - name: Add EF tools to PATH for build agent
+      run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
     - name: Run EF Core Migrations
       working-directory: apiqxote/apiqxote
       run: |
