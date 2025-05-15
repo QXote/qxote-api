@@ -20,24 +20,24 @@ jobs:
         dotnet-version: 9.0.x
         
     - name: Restore dependencies
-      working-directory: ./src/qxote-api
+      working-directory: apiqxote
       run: dotnet restore
       
     - name: Build
-      working-directory: ./src/qxote-api
+      working-directory: apiqxote
       run: dotnet build --no-restore
       
    # TODO: Set up unit tests
    # - name: Test
-   #   working-directory: ./src/qxote-api
+   #   working-directory: qpiqxote
    #   run: dotnet test --no-build --verbosity normal
    
     - name: Publish
-      working-directory: ./src/qxote-api
+      working-directory: apiqxote/apiqxote
       run: dotnet publish --configuration Release --output ./published
       
     - name: Run EF Core Migrations
-      working-directory: ./src/qxote-api
+      working-directory: apiqxote/apiqxote
       run: |
         dotnet ef database update
       env:
