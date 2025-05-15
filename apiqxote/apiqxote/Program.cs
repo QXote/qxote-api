@@ -13,11 +13,9 @@ namespace apiqxote
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             builder.Services.AddDbContext<DatabaseqxoteContext>();
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
 
             var modelBuilder = new ODataConventionModelBuilder();
@@ -62,7 +60,12 @@ namespace apiqxote
 
             app.UseAuthorization();
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.MapControllers();
+
+            app.MapFallbackToFile("index.html");
 
             app.Run();
         }
