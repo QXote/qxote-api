@@ -18,23 +18,33 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+        
     - name: Restore dependencies
+      working-directory: ./src/qxote-api
       run: dotnet restore
+      
     - name: Build
+      working-directory: ./src/qxote-api
       run: dotnet build --no-restore
+      
    # TODO: Set up unit tests
    # - name: Test
+   #   working-directory: ./src/qxote-api
    #   run: dotnet test --no-build --verbosity normal
+   
     - name: Publish
+      working-directory: ./src/qxote-api
       run: dotnet publish --configuration Release --output ./published
+      
     - name: Run EF Core Migrations
+      working-directory: ./src/qxote-api
       run: |
-        dotnet ef database update --project ./YourProjectName/YourProjectName.csproj --startup-project ./YourProjectName/YourProjectName.csproj
+        dotnet ef database update
       env:
         DOTNET_CONNECTION_STRING: ${{ secrets.SQL_SERVER_CONNECTION_STRING }}
+        
     - name: Deploy and Restart the Application
       run: |
-        cp -r ./published/* /var/www/myapp/
         sudo systemctl restart qxoteapi.service
 
 
