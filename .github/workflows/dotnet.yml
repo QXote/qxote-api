@@ -18,23 +18,39 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+        
     - name: Restore dependencies
+      working-directory: apiqxote
       run: dotnet restore
+      
     - name: Build
+      working-directory: apiqxote
       run: dotnet build --no-restore
+      
    # TODO: Set up unit tests
    # - name: Test
+   #   working-directory: qpiqxote
    #   run: dotnet test --no-build --verbosity normal
+   
     - name: Publish
+      working-directory: apiqxote/apiqxote
       run: dotnet publish --configuration Release --output ./published
+
+    - name: Add EF tools to PATH for build agent
+      run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
     - name: Run EF Core Migrations
+      working-directory: apiqxote/apiqxote
       run: |
-        dotnet ef database update --project ./YourProjectName/YourProjectName.csproj --startup-project ./YourProjectName/YourProjectName.csproj
+        dotnet ef database update
       env:
         DOTNET_CONNECTION_STRING: ${{ secrets.SQL_SERVER_CONNECTION_STRING }}
+        
     - name: Deploy and Restart the Application
+      working-directory: apiqxote/apiqxote
       run: |
-        cp -r ./published/* /var/www/myapp/
+        ls
+        cp -r ./published/* /var/www/apiqxote/
         sudo systemctl restart qxoteapi.service
 
 
