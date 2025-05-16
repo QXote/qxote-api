@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace apiqxote.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PlantController : ControllerBase
     {
